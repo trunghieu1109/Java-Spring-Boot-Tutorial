@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 
@@ -13,7 +14,11 @@ import org.aspectj.lang.ProceedingJoinPoint;
 @Component
 public class DemoAspect {
 
-    @Before(value = "execution(* com.example.demo..*(..))")
+    @Pointcut(value = "execution(* com.example.demo..*(..))")
+    public void k() {
+    }
+
+    @Before("k()")
     public void beforeAdvice(JoinPoint joinPoint) {
         System.out.println("Implement Before Advice");
     }
@@ -23,7 +28,7 @@ public class DemoAspect {
         System.out.println("Implement After Advice");
     }
 
-    @AfterReturning(value = "execution(* com.example.demo..*(..))")
+    @AfterReturning(pointcut = "execution(* com.example.demo..*(..))")
     public void afterReturningAdvice(JoinPoint joinPoint) {
         System.out.println("Implement After Returning Advice");
     }
