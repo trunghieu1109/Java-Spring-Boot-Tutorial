@@ -23,7 +23,7 @@
 		<constructor-arg value = "Dat"></constructor-arg>
 	</bean>
 
-	<bean id="a1" class="main.java.com.example.demo.Address">
+	<bean id="a1" class="com.example.demo.Address">
 		<constructor-arg value = "Phu Tho"></constructor-arg>
 		<constructor-arg value = "Viet Tri"></constructor-arg>
 		<constructor-arg value = "Trung Vuong"></constructor-arg>

@@ -1,27 +1,38 @@
 package com.example.demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import main.java.com.example.demo.Address;
+import com.example.demo.Address;
+import com.example.demo.Outfit;
 
+@Component
 public class Student {
     private String name;
     private int age;
+
+    @Autowired
     private Address address;
+
+    // @Autowired
+    private Outfit outfit;
     private List<String> quote;
 
     private Map<String, Integer> score;
 
-    public String getName() {
-        return name;
-    }
-
     public Student() {
 
+    }
+
+    public Student(@Qualifier("skirt") Outfit outfit) {
+        this.outfit = outfit;
     }
 
     public Student(int age) {
@@ -30,6 +41,11 @@ public class Student {
 
     public Student(String name) {
         this.name = name;
+    }
+
+    // @Autowired // have the same result as assigned above variable
+    public Student(Address address) {
+        this.address = address;
     }
 
     public Student(String name, int age, Address address) {
@@ -54,6 +70,11 @@ public class Student {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Autowired
+    public void setOutfit(@Qualifier("skirt") Outfit outfit) {
+        this.outfit = outfit;
     }
 
     public void displayInfo() {
@@ -84,4 +105,21 @@ public class Student {
             System.out.println(entry.getKey() + " " + entry.getValue());
         }
     }
+
+    public String toString() {
+        return "it's sample student object";
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public Outfit getOutfit() {
+        return outfit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 }
