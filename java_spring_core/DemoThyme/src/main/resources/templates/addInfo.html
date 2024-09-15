@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hello World</title>
+</head>
+<body>
+
+<h1>Hey, input your information</h1>
+<form th:action="@{/addInfo}" th:object="${newsample}" method="post">
+  <p>Key <input type="text" th:field="*{key}"></p>
+  <p>Value <input type="text" th:field="*{value}"></p>
+  <button type="submit">Submit</button>
+</form>
+
+</body>
+</html>
