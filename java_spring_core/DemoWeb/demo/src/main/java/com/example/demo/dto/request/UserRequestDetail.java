@@ -27,7 +27,7 @@ public class UserRequestDetail implements Serializable {
     private String email;
 
     @NotEmpty(message = "address can not be empty")
-    private Set<String> address;
+    private Set<AddressDTO> address;
 
     @NotNull(message = "dateOfBirth must be not null")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -60,7 +60,7 @@ public class UserRequestDetail implements Serializable {
         return email;
     }
 
-    public Set<String> getAddress() {
+    public Set<AddressDTO> getAddress() {
         return address;
     }
 
@@ -80,7 +80,7 @@ public class UserRequestDetail implements Serializable {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public void setAddress(Set<String> address) {
+    public void setAddress(Set<AddressDTO> address) {
         this.address = address;
     }
 

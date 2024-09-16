@@ -1,0 +1,7 @@
+server:
+  port: 80
+spring:
+  application:
+    name: Hieu Nguyen
+  profiles:
+    active: '@spring.profiles.active@'
