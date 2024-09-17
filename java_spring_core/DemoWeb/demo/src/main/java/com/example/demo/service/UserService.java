@@ -16,7 +16,7 @@ public interface UserService {
     void deleteUser(long userId);
 
     UserDetailResponse getUser(long userId);
-    PageResponse<?> getAllUsers(int pageNo, int pageSize);
+    PageResponse<?> getAllUsers(int pageNo, int pageSize, String... sortBy);
     PageResponse<?> getAllUsersBySearch(int pageNo, int pageSize, String search);
     PageResponse<?> getAllUsersByCriteria(int pageNo, int pageSize, String... search);
 }

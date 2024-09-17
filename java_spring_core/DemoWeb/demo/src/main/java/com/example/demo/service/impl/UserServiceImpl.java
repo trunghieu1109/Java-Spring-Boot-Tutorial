@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -94,11 +96,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageResponse<?> getAllUsers(int pageNo, int pageSize) {
+    public PageResponse<?> getAllUsers(int pageNo, int pageSize, String... sortBy) {
+//        Pageable pageable1 = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "firstName"));
+        List<Sort.Order> orders = new ArrayList<>();
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        for (String str : sortBy) {
+            if (StringUtils.hasLength(str)) {
+                Pattern pattern = Pattern.compile("(\\w+?)(:)(.*)");
+                Matcher matcher = pattern.matcher(str);
 
-//        Pageable pageable1 = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, "field"));
+                if (matcher.find()) {
+                    System.out.println(matcher.group(1));
+                    if (matcher.group(3).equalsIgnoreCase("asc")) {
+                        orders.add(new Sort.Order(Sort.Direction.ASC, matcher.group(1)));
+                    } else {
+                        orders.add(new Sort.Order(Sort.Direction.DESC, matcher.group(1)));
+                    }
+                }
+            }
+        }
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(orders));
 
         Page<User> users = userRepository.findAll(pageable);
 

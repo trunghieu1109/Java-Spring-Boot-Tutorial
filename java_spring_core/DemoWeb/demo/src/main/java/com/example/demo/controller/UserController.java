@@ -124,15 +124,15 @@ public class UserController {
             )})
     @GetMapping("/list")
 //    @ResponseStatus(HttpStatus.OK)
-    public ResponseData<PageResponse> getUserList(int pageNo, int pageSize) {
+    public ResponseData<PageResponse> getUserList(int pageNo, int pageSize, String... sortBy) {
 
         log.info("Get user");
-        return new ResponseData<>(HttpStatus.OK.value(), "Get list successfully", userService.getAllUsers(pageNo, pageSize));
+        return new ResponseData<>(HttpStatus.OK.value(), "Get list successfully", userService.getAllUsers(pageNo, pageSize, sortBy));
     }
 
     @GetMapping("/list-search")
 //    @ResponseStatus(HttpStatus.OK)
-    public ResponseData<PageResponse> getUserList(int pageNo, int pageSize, String search) {
+    public ResponseData<PageResponse> getUserListSearch(int pageNo, int pageSize, String search) {
 
         log.info("Get user by search");
         return new ResponseData<>(HttpStatus.OK.value(), "Get list successfully", userService.getAllUsersBySearch(pageNo, pageSize, search));
@@ -140,7 +140,7 @@ public class UserController {
 
     @GetMapping("/list-search-criteria")
 //    @ResponseStatus(HttpStatus.OK)
-    public ResponseData<PageResponse> getUserList(int pageNo, int pageSize, String... search) {
+    public ResponseData<PageResponse> getUserListCriteria(int pageNo, int pageSize, String... search) {
 
         log.info("Get user by search");
         return new ResponseData<>(HttpStatus.OK.value(), "Get list successfully", userService.getAllUsersByCriteria(pageNo, pageSize, search));
