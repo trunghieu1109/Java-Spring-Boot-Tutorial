@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.UserRequestDetail;
-import com.example.demo.dto.response.ResponseData;
-import com.example.demo.dto.response.ResponseSuccess;
+import com.example.demo.dto.response.*;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,10 +12,10 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -30,25 +29,29 @@ public class UserController {
     @PostMapping(value="/", headers = "apiKey=v1.0")
 //    @ResponseStatus(HttpStatus.CREATED)
     public ResponseData<Long> addUser(@Valid @RequestBody UserRequestDetail userRequestDetail) {
-        log.info("Add user to database");
+        log.info("Adding user to database");
 
         try {
             long userId = userService.addUser(userRequestDetail);
-            return new ResponseData<>(HttpStatus.CREATED.value(), "User has been created", userId);
+            return new ResponseData<>(HttpStatus.CREATED.value(), "Add user successfully", userId);
         } catch (Exception e) {
-            log.error("Cant add user to database, exception: ", e.getMessage(), e.getCause());
-
-            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "Add user fail");
+            log.error("can't get user", e.getMessage(), e.getCause());
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Can't add user");
         }
     }
 
     @PutMapping("/{userId}")
 //    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseSuccess updateUser(@PathVariable("userId") int userId, @RequestBody UserRequestDetail userRequestDetail) {
+    public ResponseData<Long> updateUser(@PathVariable("userId") int userId, @RequestBody UserRequestDetail userRequestDetail) {
 
         System.out.println("Request update user, user " + userId);
 
-        return new ResponseSuccess(HttpStatus.ACCEPTED, "User updated");
+        try {
+            userService.updateUser(userId, userRequestDetail);
+            return new ResponseData<>(HttpStatus.ACCEPTED.value(), "User updated");
+        } catch(Exception e) {
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Reject updating request");
+        }
     }
 
     @PatchMapping("/{userId}")
@@ -62,17 +65,30 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseSuccess deleteUser(@Min(1) @PathVariable("userId") int userId, @RequestBody UserRequestDetail userRequestDetail) {
+    public ResponseData<Long> deleteUser(@Min(1) @PathVariable("userId") int userId, @RequestBody UserRequestDetail userRequestDetail) {
 
         System.out.println("Request delete user");
 
-        return new ResponseSuccess(HttpStatus.NO_CONTENT, "User deleted");
+        try {
+            userService.deleteUser(userId);
+            return new ResponseData<>(HttpStatus.NO_CONTENT.value(), "User deleted");
+        } catch (Exception e) {
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Cant delete user");
+        }
     }
 
     @GetMapping("/{userId}")
 //    @ResponseStatus(HttpStatus.OK)
-    public ResponseData<UserRequestDetail> getUser(@PathVariable("userId") int userId) {
-        return new ResponseData<>(HttpStatus.OK.value(), "Get successfully", new UserRequestDetail("Hieu", "Nguyen", "phone", "email"));
+    public ResponseData<UserDetailResponse> getUser(@PathVariable("userId") int userId) {
+
+        try {
+            UserDetailResponse userDetailResponse = userService.getUser(userId);
+            return new ResponseData<>(HttpStatus.OK.value(), "Get user successfully", userDetailResponse);
+        } catch (Exception e) {
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        }
+
+
     }
 
     @Operation(summary = "summary", description = "Get a list of user details", responses = {
@@ -108,12 +124,26 @@ public class UserController {
             )})
     @GetMapping("/list")
 //    @ResponseStatus(HttpStatus.OK)
-    public ResponseSuccess getUserList() {
+    public ResponseData<PageResponse> getUserList(int pageNo, int pageSize) {
 
-        ResponseSuccess responseSuccess = new ResponseSuccess(HttpStatus.OK, "Get list", List.of(new UserRequestDetail("Hieu", "Nguyen", "00", "afda@gmail.com"),
-                new UserRequestDetail("Dat", "Nguyen", "11", "kunno@gmail.com")));
+        log.info("Get user");
+        return new ResponseData<>(HttpStatus.OK.value(), "Get list successfully", userService.getAllUsers(pageNo, pageSize));
+    }
 
-        return responseSuccess;
+    @GetMapping("/list-search")
+//    @ResponseStatus(HttpStatus.OK)
+    public ResponseData<PageResponse> getUserList(int pageNo, int pageSize, String search) {
+
+        log.info("Get user by search");
+        return new ResponseData<>(HttpStatus.OK.value(), "Get list successfully", userService.getAllUsersBySearch(pageNo, pageSize, search));
+    }
+
+    @GetMapping("/list-search-criteria")
+//    @ResponseStatus(HttpStatus.OK)
+    public ResponseData<PageResponse> getUserList(int pageNo, int pageSize, String... search) {
+
+        log.info("Get user by search");
+        return new ResponseData<>(HttpStatus.OK.value(), "Get list successfully", userService.getAllUsersByCriteria(pageNo, pageSize, search));
     }
 
 }
