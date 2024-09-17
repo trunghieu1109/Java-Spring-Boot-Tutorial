@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.request.UserRequestDetail;
 import com.example.demo.dto.response.PageResponse;
 import com.example.demo.dto.response.UserDetailResponse;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Address;
 import com.example.demo.model.User;
 import com.example.demo.repository.SearchRepository;
@@ -36,6 +37,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long addUser(UserRequestDetail userRequestDetail) {
+
+        if (userRequestDetail.getFirstName() == "") {
+            throw new ResourceNotFoundException("First name is blank");
+        }
+
         User user = User.builder()
                 .firstName(userRequestDetail.getFirstName())
                 .lastName(userRequestDetail.getLastName())

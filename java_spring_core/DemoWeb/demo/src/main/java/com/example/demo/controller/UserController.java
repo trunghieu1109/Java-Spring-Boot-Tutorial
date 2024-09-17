@@ -36,7 +36,7 @@ public class UserController {
             return new ResponseData<>(HttpStatus.CREATED.value(), "Add user successfully", userId);
         } catch (Exception e) {
             log.error("can't get user", e.getMessage(), e.getCause());
-            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Can't add user");
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
     }
 
@@ -46,12 +46,9 @@ public class UserController {
 
         System.out.println("Request update user, user " + userId);
 
-        try {
-            userService.updateUser(userId, userRequestDetail);
-            return new ResponseData<>(HttpStatus.ACCEPTED.value(), "User updated");
-        } catch(Exception e) {
-            return new ResponseError(HttpStatus.BAD_REQUEST.value(), "Reject updating request");
-        }
+        userService.updateUser(userId, userRequestDetail);
+        return new ResponseData<>(HttpStatus.ACCEPTED.value(), "User updated");
+
     }
 
     @PatchMapping("/{userId}")
@@ -80,15 +77,8 @@ public class UserController {
     @GetMapping("/{userId}")
 //    @ResponseStatus(HttpStatus.OK)
     public ResponseData<UserDetailResponse> getUser(@PathVariable("userId") int userId) {
-
-        try {
-            UserDetailResponse userDetailResponse = userService.getUser(userId);
-            return new ResponseData<>(HttpStatus.OK.value(), "Get user successfully", userDetailResponse);
-        } catch (Exception e) {
-            return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-        }
-
-
+        UserDetailResponse userDetailResponse = userService.getUser(userId);
+        return new ResponseData<>(HttpStatus.OK.value(), "Get user successfully", userDetailResponse);
     }
 
     @Operation(summary = "summary", description = "Get a list of user details", responses = {
