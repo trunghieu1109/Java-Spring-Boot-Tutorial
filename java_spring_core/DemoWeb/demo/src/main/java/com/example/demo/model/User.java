@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity(name="User")
 @Table(name="tbl_user")
-public class User extends AbstractEntity {
+public class User extends AbstractEntity<Long> {
 
     @Column(name="first_name")
     private String firstName;
@@ -36,6 +36,12 @@ public class User extends AbstractEntity {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Address> addresses = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<UserHasGroup> userHasGroups = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<UserHasRole> userHasRoles = new HashSet<>();
 
     public void saveAddress(Address address) {
         if (addresses == null) {

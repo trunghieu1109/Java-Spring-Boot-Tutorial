@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.configuration.Translator;
 import com.example.demo.dto.request.UserRequestDetail;
 import com.example.demo.dto.response.*;
+import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,6 +28,8 @@ public class UserController {
 
     private final UserService userService;
 
+//    private final RoleService roleService;
+
     @PostMapping(value="/", headers = "apiKey=v1.0")
 //    @ResponseStatus(HttpStatus.CREATED)
     public ResponseData<Long> addUser(@Valid @RequestBody UserRequestDetail userRequestDetail) {
@@ -33,7 +37,7 @@ public class UserController {
 
         try {
             long userId = userService.addUser(userRequestDetail);
-            return new ResponseData<>(HttpStatus.CREATED.value(), "Add user successfully", userId);
+            return new ResponseData<>(HttpStatus.CREATED.value(), Translator.toLocale("user.add.success"), userId);
         } catch (Exception e) {
             log.error("can't get user", e.getMessage(), e.getCause());
             return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
