@@ -1,5 +1,6 @@
 package com.example.demo.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,7 +16,7 @@ import java.util.Date;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, ResourceAccessException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, ResourceAccessException.class, NumberFormatException.class, ExpiredJwtException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(Exception e, WebRequest request) {
 

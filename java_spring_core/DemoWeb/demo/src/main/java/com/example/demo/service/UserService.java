@@ -3,12 +3,15 @@ package com.example.demo.service;
 import com.example.demo.dto.request.UserRequestDetail;
 import com.example.demo.dto.response.PageResponse;
 import com.example.demo.dto.response.UserDetailResponse;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public interface UserService {
+
+    UserDetailsService userDetailsService();
 
     Long addUser(UserRequestDetail userRequestDetail);
     void updateUser(long userId, UserRequestDetail userRequestDetail);

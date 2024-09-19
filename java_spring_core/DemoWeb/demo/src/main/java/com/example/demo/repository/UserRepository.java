@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -14,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Distinct
 //    @Query(value = "select distinct from User u where u.firstName=:firstName and u.lastName=:lastName")
     public List<User> findDistinctByFirstNameAndLastName(String firstName, String lastName);
+
+    Optional<User> findByUsername(String username);
 
     @Query(value="select u from tbl_user u inner join tbl_address a on u.id = a.user_id where a.city=?1", nativeQuery = true)
     public List<User> getAllUser(String city);
